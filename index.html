@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>הזמנה לערב קלוד ובירה · הפרתיה</title>
-<meta name="description" content="בואו ללמוד לעבוד עם קלוד קוד. רביעי 25.11, 20:00, בפרתיה. בהרשמה מראש, 12 מקומות.">
+<meta name="description" content="בואו ללמוד לעבוד עם קלוד קוד. רביעי 25.11, 20:00, בפרתיה. בהרשמה מראש, 15 מקומות.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="הזמנה לערב קלוד ובירה">
 <meta property="og:description" content="בואו ללמוד לעבוד עם קלוד קוד. רביעי 25.11, 20:00, בפרתיה. בהרשמה מראש.">
@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#F4EADB">
 <!--
   דף ההרשמה לערב "קלוד ובירה" (קלוד קוד למתחילים), הפרתיה, רביעי 25/11/2026.
-  השרת: Apps Script + גיליון (התיקייה backend/ בפרויקט, לא בריפו הזה). עד 12 נרשמים, אחר כך רשימת המתנה.
+  השרת: Apps Script + גיליון (התיקייה backend/ בפרויקט, לא בריפו הזה). השרת מחליט מתי עוברים לרשימת המתנה.
   הדף לא שומר שום נתון אישי. השם והטלפון נשלחים רק לשרת.
 -->
 <style>
@@ -122,7 +122,7 @@
     <div class="facts">
         <div class="when">רביעי 25.11 · 20:00</div>
         <div class="where">בפרתיה, נופי פרת · בהרשמה מראש</div>
-        <div class="spots"><span class="chip" id="spots">12 מקומות בלבד</span></div>
+        <div class="spots"><span class="chip" id="spots">15 מקומות בלבד</span></div>
         <a class="cta" href="#register">להרשמה</a>
     </div>
 
@@ -195,7 +195,6 @@
 
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyumjSVuXXHIQdaFbgZpNdJL9rOEWb5FI3O-C2tAnj9w6DkDE0HUT4liw81sZQNXOKF5A/exec';
-const CAP = 12;
 const $ = (id) => document.getElementById(id);
 const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
@@ -213,7 +212,7 @@ async function apiCall(action, params, timeoutMs) {
 function showSpots(s) {
     if (!s || !s.success) return;
     const el = $('spots');
-    if (s.left > 0) { el.textContent = s.left === 1 ? 'נשאר מקום אחד!' : `נשארו ${s.left} מקומות מתוך ${s.cap}`; el.classList.toggle('hot', s.left <= 4); }
+    if (s.left > 0) { el.textContent = s.left === 1 ? 'נשאר מקום אחד!' : `נשארו ${s.left} מקומות`; el.classList.toggle('hot', s.left <= 4); }
     else { el.textContent = 'המקומות נגמרו · אפשר להירשם לרשימת ההמתנה'; el.classList.add('hot'); $('send').textContent = 'להירשם לרשימת ההמתנה'; }
 }
 apiCall('status', {}, 40000).then(showSpots).catch(() => {});
@@ -232,11 +231,11 @@ function showResult(r) {
         $('r-emo').textContent = '⏳';
         $('r-title').textContent = 'נרשמת לרשימת ההמתנה';
         $('r-place').textContent = `מקום ${r.place} ברשימת ההמתנה`;
-        $('r-text').textContent = `כל ${CAP} המקומות כבר תפוסים. אם יתפנה מקום, אורי יעדכן אותך בוואטסאפ.`;
+        $('r-text').textContent = 'כל המקומות כבר תפוסים. אם יתפנה מקום, אורי יעדכן אותך בוואטסאפ.';
     } else {
         $('r-emo').textContent = '🎉';
         $('r-title').textContent = 'נרשמת! יש לך מקום';
-        $('r-place').textContent = `מקום ${r.place} מתוך ${CAP}`;
+        $('r-place').textContent = 'המקום שלך שמור';
         $('r-text').textContent = 'אורי יצרף אותך לקבוצת הוואטסאפ של המשתתפים, ושם יגיע מדריך הכנה קצר. נתראה ברביעי ב-20:00 בפרתיה.';
     }
     box.classList.add('on');
